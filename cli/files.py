@@ -8,6 +8,7 @@ from rich import print as rprint
 console = Console()
 
 @click.group()
+@click.version_option(version='1.0.0', prog_name='OnlyFiles')
 def cli():
     """CLI para gerenciamento de arquivos"""
     pass
