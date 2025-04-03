@@ -19,10 +19,12 @@ setup_logging()
 # Obtém o logger
 logger = logging.getLogger(__name__)
 
+
+'''exemplo de uso, não entra no código
 # Exemplo de uso
 logger.info("Servidor iniciado")
 
 try:
     1/0  # Exemplo que gera erro
 except Exception as e:
-    logger.exception(f"Erro inesperado: {str(e)}")
+    logger.exception(f"Erro inesperado: {str(e)}")'''
