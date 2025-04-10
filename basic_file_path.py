@@ -42,6 +42,6 @@ def basic_file_path():
     os.makedirs(destination_path, exist_ok=True)
     
     # Muda para a pasta de origem
-    os.chdir(origin_path)
+    # os.chdir(origin_path)
 
     return origin_path, destination_path  # Retorna os caminhos

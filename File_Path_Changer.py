@@ -147,11 +147,11 @@ def move_by_extension():
 def view_log_history():
     '''Método que exibe o histórico de movimentações armazenado no log'''
     
-    log_file = "app.log"  # Nome do arquivo de log (ajuste conforme necessário)
+    LOG_FILE = "app.log"  # Nome do arquivo de log (ajuste conforme necessário)
 
     try:
         # Tenta abrir e ler o arquivo de log
-        with open(log_file, "r", encoding="utf-8") as f:
+        with open(LOG_FILE, "r", encoding="utf-8") as f:
             log_content = f.readlines()
 
         if not log_content:
@@ -169,9 +169,9 @@ def view_log_history():
 def clear_log_history():
     '''Método que apaga o histórico de movimentações (conteúdo do log) caso o usuário deseje'''
 
-    log_file = "app.log"  # mesmo nome usado pelo logger
+    LOG_FILE = "app.log"  # mesmo nome usado pelo logger
 
-    if not os.path.exists(log_file):
+    if not os.path.exists(LOG_FILE):
         print("\nNenhum histórico encontrado para limpar.\n")
         return
 
@@ -179,13 +179,12 @@ def clear_log_history():
     confirm = input("Tem certeza que deseja limpar todo o histórico? (s/n): ").strip().lower()
     if confirm == 's':
         try:
-            open(log_file, "w").close()  # Abre o arquivo em modo escrita e limpa
+            open(LOG_FILE, "w").close()  # Abre o arquivo em modo escrita e limpa
             print("\nHistórico de operações limpo com sucesso.\n")
         except Exception as e:
             print(f"\nErro ao limpar o histórico: {str(e)}\n")
     else:
         print("\nOperação cancelada. O histórico não foi alterado.\n")
-
 
 
 if __name__ == '__main__':
@@ -215,3 +214,9 @@ if __name__ == '__main__':
             break
         else:
             print("Opção inválida!")
+
+'''if __name__ == "__main__":
+    # Teste temporário da visualização do log
+    view_log_history()
+    import os
+    print("Arquivo de log existe?", os.path.exists("app.log"))'''
