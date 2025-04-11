@@ -6,13 +6,14 @@ class Logger:
     LOG_FILE = 'app.log'  # Nome padrão do arquivo de log
     _configured = False  # Controle interno de configuração única
 
-    def __init__(self, name=__name__):
+    def __init__(self, name=__name__, verbose=False):
         """
         Inicializa o objeto logger
         Parâmetros:
             name (str): Nome do logger (padrão: nome do módulo atual)
         """
         self.logger = logging.getLogger(name)
+        self.__verbose = verbose
         
         # Configura o logging apenas na primeira instanciação
         if not Logger._configured:
@@ -20,14 +21,20 @@ class Logger:
             Logger._configured = True
 
     def _setup_logging(self):
+        handlers_list = []
+        if self.__verbose:
+            handlers_list = [
+                logging.FileHandler(self.LOG_FILE, encoding='utf-8'),
+                logging.StreamHandler()
+            ]
+        else:
+            handlers_list = [logging.FileHandler(self.LOG_FILE, encoding='utf-8')]
+
         logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s - %(levelname)s - %(message)s',
             datefmt='%Y-%m-%d %H:%M:%S', # Exibição da data e hora no formato sugerido em reunião
-            handlers=[
-                logging.FileHandler(self.LOG_FILE, encoding='utf-8'),
-                logging.StreamHandler()
-            ]
+            handlers = handlers_list
         )
 
     def info(self, message):

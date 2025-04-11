@@ -4,11 +4,13 @@ from logger import Logger
 
 class FileManager:
 
+    def __init__(self, logger):
+        self.__logger = logger
+
     def list_files(self, origin_path):
         return os.listdir(origin_path)
 
     def move_files_by_type(self, origin_path, destination_path, extensions_list):
-        logger = Logger("FileManager")
         # Verifica se a pessoa colocou os paths das pastas
         if not origin_path or not destination_path:
             print("Erro: O caminho de origem ou destino está vazio!")
@@ -37,21 +39,21 @@ class FileManager:
                         # Move o arquivo
                         try:
                             shutil.move(path_file, os.path.join(destination_path, file))
-                            logger.info(f'Arquivo "{file}" movido para a pasta "{destination_path}".')
+                            self.__logger.info(f'Arquivo "{file}" movido para a pasta "{destination_path}".')
                         except Exception as erro:
-                            logger.error(f'Erro ao mover o file "{file}": {erro}')
+                            self.__logger.error(f'Erro ao mover o file "{file}": {erro}')
                         break
             else:
                 print(f'"{file}" não é um arquivo, ignorando.')
     pass
 
 if __name__ == '__main__':
-    file_manager = FileManager()
+    file_manager = FileManager(Logger("FileManager"))
 
     types = {
         'Imagens': ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.svg', '.webp'],
         'Documentos': ['.pdf', '.txt', '.docx', '.doc', '.xls', '.xlsx', '.ppt', '.pptx', '.odt'],
-        'Musicas': ['.mp3', '.wav', '.aac', '.flac', '.ogg', '.m4a'],
+        'Músicas': ['.mp3', '.wav', '.aac', '.flac', '.ogg', '.m4a'],
         'Vídeos': ['.mp4', '.mkv', '.avi', '.mov', '.wmv', '.flv', '.webm'],
         }
 
