@@ -4,16 +4,16 @@ OnlyFiles - A powerful file management and backup CLI tool.
 """
 
 import sys
-from src.cli.commands import cli
-from src.utils.logging import Logger
+from commands import cli
+from logger import Logger
 
 # Initialize logger
-logger = Logger()
+logger = Logger("OnlyFiles", True)
 
-if __name__ == '__main__':
+def main():
     try:
         # Click automatically processes command line arguments
-        cli(ctx=None)
+        cli()
     except KeyboardInterrupt:
         print("\nOperation cancelled by user. Exiting...")
         sys.exit(0)
@@ -21,4 +21,7 @@ if __name__ == '__main__':
         error_message = f"An unexpected error occurred: {str(e)}"
         print(f"\n[ERROR] {error_message}")
         logger.error(error_message)
-        sys.exit(1) 
+        sys.exit(1)
+
+if __name__ == '__main__':
+    main() 

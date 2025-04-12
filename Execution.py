@@ -12,38 +12,39 @@ class Execution():
 
         self.__types = {
             'Imagens': ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.svg', '.webp'],
-            'Documentos': ['.pdf', '.txt', '.docx', '.doc', '.xls', '.xlsx', '.ppt', '.pptx', '.odt'],
+            'Documentos': ['.pdf', '.txt', '.docx', '.doc', '.xls', '.xlsx', '.ppt', '.pptx', '.odt', '.md'],
             'Músicas': ['.mp3', '.wav', '.aac', '.flac', '.ogg', '.m4a'],
             'Vídeos': ['.mp4', '.mkv', '.avi', '.mov', '.wmv', '.flv', '.webm'],
+            'Outros': []
         }
 
     def organize_music(self, origin_path):
-
        destination = os.path.join(origin_path, "Músicas")
        self.__filemanager.move_files_by_type(origin_path, destination, self.__types["Músicas"])
 
     def organize_images(self, origin_path):
-
         destination = os.path.join(origin_path, "Imagens")
         self.__filemanager.move_files_by_type(origin_path, destination, self.__types["Imagens"])
 
     def organize_documents(self, origin_path):
-
        destination = os.path.join(origin_path, "Documentos")
        self.__filemanager.move_files_by_type(origin_path, destination, self.__types["Documentos"])
 
     def organize_videos(self, origin_path):
-
        destination = os.path.join(origin_path, "Vídeos")
        self.__filemanager.move_files_by_type(origin_path, destination, self.__types["Vídeos"])
 
-    def organize_all(self, origin_path):
-        """Organiza todos os tipos (músicas, imagens, documentos e vídeos) de uma vez"""
+    def organize_others(self, origin_path):
+       destination = os.path.join(origin_path, "Outros")
+       self.__filemanager.move_other_files(origin_path, destination, self.__types)
 
+    def organize_all(self, origin_path):
+        """Organiza todos os tipos de arquivos"""
         self.organize_music(origin_path)
         self.organize_images(origin_path)
         self.organize_documents(origin_path)
         self.organize_videos(origin_path)
+        self.organize_others(origin_path)
 
 
 if __name__ == '__main__':
@@ -63,12 +64,13 @@ if __name__ == '__main__':
         print("2. Organizar imagens")
         print("3. Organizar documentos")
         print("4. Organizar vídeos")
-        print("5. Organizar todos os tipos de arquivos")
-        print("6. Sair do programa")
+        print("5. Organizar outros arquivos")
+        print("6. Organizar todos os tipos de arquivos")
+        print("7. Sair do programa")
 
-        option = input("Escolha uma opção (1 a 6): ")
+        option = input("Escolha uma opção (1 a 7): ")
 
-        if option == "6":
+        if option == "7":
             print("Encerrando programa.")
             break
 
@@ -83,6 +85,8 @@ if __name__ == '__main__':
         elif option == "4":
             execution.organize_videos(origin_path)
         elif option == "5":
+            execution.organize_others(origin_path)
+        elif option == "6":
             execution.organize_all(origin_path)
         else:
             print("Opção inválida!")

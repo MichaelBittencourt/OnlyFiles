@@ -26,7 +26,17 @@ class FileManager:
             print("A pasta de origem está vazia!")
             return
 
+        # Obtém o nome da pasta de destino para ignorá-la
+        destination_folder_name = os.path.basename(destination_path)
+
+        # Flag para verificar se encontrou arquivos do tipo
+        found_files = False
+
         for file in files:
+            # Ignora a pasta de destino se ela já existir
+            if file == destination_folder_name:
+                continue
+
             path_file = os.path.join(origin_path, file)
 
             # Verifica se é um arquivo
@@ -34,7 +44,10 @@ class FileManager:
                 # Pega a extensão do arquivo
                 for ext in extensions_list:
                     if file.endswith(ext):
-                        os.makedirs(destination_path, exist_ok=True)
+                        # Cria a pasta apenas se encontrar o primeiro arquivo do tipo
+                        if not found_files:
+                            os.makedirs(destination_path, exist_ok=True)
+                            found_files = True
 
                         # Move o arquivo
                         try:
@@ -45,7 +58,59 @@ class FileManager:
                         break
             else:
                 print(f'"{file}" não é um arquivo, ignorando.')
-    pass
+
+    def move_other_files(self, origin_path, destination_path, types_dict):
+        """Move arquivos que não se encaixam em nenhuma categoria para a pasta Outros"""
+        if not origin_path or not destination_path:
+            print("Erro: O caminho de origem ou destino está vazio!")
+            return
+
+        if os.path.abspath(origin_path) == os.path.abspath(destination_path):
+            print("Erro: A pasta de destino não pode ser a mesma da origem.")
+            return
+
+        # Lista todos os arquivos da origem
+        files = self.list_files(origin_path)
+
+        if not files:
+            print("A pasta de origem está vazia!")
+            return
+
+        # Obtém o nome da pasta de destino para ignorá-la
+        destination_folder_name = os.path.basename(destination_path)
+
+        # Cria um conjunto com todas as extensões conhecidas
+        known_extensions = set()
+        for extensions in types_dict.values():
+            known_extensions.update(extensions)
+
+        # Flag para verificar se encontrou arquivos não listados
+        found_files = False
+
+        for file in files:
+            # Ignora a pasta de destino se ela já existir
+            if file == destination_folder_name:
+                continue
+
+            path_file = os.path.join(origin_path, file)
+
+            # Verifica se é um arquivo
+            if os.path.isfile(path_file):
+                # Pega a extensão do arquivo
+                _, ext = os.path.splitext(file)
+                
+                # Se a extensão não estiver em nenhuma categoria conhecida
+                if ext.lower() not in known_extensions:
+                    # Cria a pasta apenas se encontrar o primeiro arquivo não listado
+                    if not found_files:
+                        os.makedirs(destination_path, exist_ok=True)
+                        found_files = True
+
+                    try:
+                        shutil.move(path_file, os.path.join(destination_path, file))
+                        self.__logger.info(f'Arquivo "{file}" movido para a pasta "{destination_path}".')
+                    except Exception as erro:
+                        self.__logger.error(f'Erro ao mover o arquivo "{file}": {erro}')
 
 if __name__ == '__main__':
     file_manager = FileManager(Logger("FileManager"))
