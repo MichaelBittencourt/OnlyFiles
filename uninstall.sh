@@ -1,14 +1,8 @@
 #!/bin/bash
 
-echo "Desinstalando OnlyFiles..."
+echo "Uninstalling OnlyFiles..."
 
-# Desinstala o pacote
-echo "Removendo OnlyFiles..."
+# Remove the package
 pip3 uninstall onlyfiles -y --break-system-packages
 
-# Remove arquivos de cache
-echo "Limpando cache..."
-pip3 cache purge
-
-echo
-echo "Desinstalação concluída!" 
+echo "Uninstallation completed!" 

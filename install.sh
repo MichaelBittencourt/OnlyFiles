@@ -1,27 +1,27 @@
 #!/bin/bash
 
-echo "Instalando OnlyFiles..."
+echo "Installing OnlyFiles..."
 
-# Verifica se o Python está instalado
+# Check if Python is installed
 if ! command -v python3 &> /dev/null; then
-    echo "Python não encontrado. Por favor, instale o Python 3.8 ou superior."
+    echo "Python not found. Please install Python 3.8 or higher."
     exit 1
 fi
 
-# Verifica se o pip está instalado
+# Check if pip is installed
 if ! command -v pip3 &> /dev/null; then
-    echo "Pip não encontrado. Por favor, instale o pip3."
+    echo "Pip not found. Please install pip3."
     exit 1
 fi
 
-# Instala as dependências
-echo "Instalando dependências..."
+# Install dependencies
+echo "Installing dependencies..."
 pip3 install -r requirements.txt --break-system-packages
 
-# Instala o pacote
-echo "Instalando OnlyFiles..."
+# Install the package
+echo "Installing OnlyFiles..."
 pip3 install . --break-system-packages
 
 echo
-echo "Instalação concluída! Você pode usar o comando 'onlyfiles' agora."
-echo "Para ver a ajuda, digite: onlyfiles --help"
+echo "Installation completed! You can now use the 'onlyfiles' command."
+echo "To see the help, type: onlyfiles --help"

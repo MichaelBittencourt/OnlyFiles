@@ -2,6 +2,7 @@ import sys
 import os
 from terminal_interface import TerminalInterface
 from logger import Logger
+from help_manager import HelpManager
 
 def print_help():
     """
@@ -10,16 +11,8 @@ def print_help():
     This function displays the main help text with all available commands and options.
     """
     try:
-        # Obtém o diretório do arquivo atual
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        # Caminho para o arquivo help.txt no diretório Documents
-        help_file = os.path.join(current_dir, 'Documents', 'help.txt')
-        
-        with open(help_file, 'r', encoding='utf-8') as f:
-            help_text = f.read()
-        print(help_text)
-    except FileNotFoundError:
-        print("Error: Help file not found.")
+        help_manager = HelpManager()
+        print(help_manager.get_help_content())
     except Exception as e:
         print(f"Error reading help file: {str(e)}")
 

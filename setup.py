@@ -2,44 +2,20 @@ from setuptools import setup, find_packages
 import os
 
 def read_requirements():
-    """Lê as dependências do arquivo requirements.txt"""
+    """Reads dependencies from requirements.txt file"""
     with open('requirements.txt') as req:
         return [line.strip() for line in req if line.strip() and not line.startswith('#')]
 
 def read_file(filename):
-    """Lê o conteúdo de um arquivo"""
+    """Reads the content of a file"""
     with open(filename, 'r', encoding='utf-8') as f:
         return f.read()
 
-# Garante que o help.txt está presente
-help_text = """OnlyFiles - A powerful file management and backup CLI tool
-
-Usage:
-    onlyfiles <command> [options]
-
-Commands:
-    start           Launch the interactive terminal interface
-    --help, -h      Show this help message
-    --version       Show version information
-
-Options:
-    -d, --directory PATH    Directory to work with
-    -y, --type            Organize files by type
-    -v, --drives          List available drives
-    -l, --logs            View operation logs
-    -c, --clear-logs      Clear operation logs
-
-Examples:
-    onlyfiles start     # Start the interactive terminal interface
-    onlyfiles --help    # Show this help message
-    onlyfiles --version # Show version information
-    onlyfiles -d /path/to/directory -y  # Organize files by type in specified directory
-    onlyfiles -l                        # View operation logs
-
-For more information, visit: https://github.com/MichaelBittencourt/OnlyFiles"""
-
-with open('help.txt', 'w', encoding='utf-8') as f:
-    f.write(help_text)
+# Read the content of help.txt file
+def read_help_file():
+    help_file_path = os.path.join(os.path.dirname(__file__), 'Documents', 'help.txt')
+    with open(help_file_path, 'r', encoding='utf-8') as f:
+        return f.read()
 
 setup(
     name="onlyfiles",
@@ -47,8 +23,8 @@ setup(
     author="Grupo 05 - OnlyFiles",
     author_email="",
     description="A powerful file management and backup CLI tool",
-    long_description=read_file('README.md'),
-    long_description_content_type="text/markdown",
+    long_description=read_help_file(),
+    long_description_content_type="text/plain",
     url="https://github.com/MichaelBittencourt/OnlyFiles",
     packages=find_packages(include=['*']),
     include_package_data=True,

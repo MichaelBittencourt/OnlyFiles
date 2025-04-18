@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "onlyfiles"
 version = "1.0.0"
-description = "CLI para gerenciamento de arquivos"
-authors = ["Grupo 05 - OnlyFiles"]
+description = "CLI for file management"
+authors = ["Group 05 - OnlyFiles"]
 packages = [{include = "*"}]
 
 [tool.poetry.dependencies]

@@ -1,14 +1,14 @@
 @echo off
-echo Desinstalando OnlyFiles...
+echo Uninstalling OnlyFiles...
 
-:: Desinstala o pacote
-echo Removendo OnlyFiles...
+:: Uninstall the package
+echo Removing OnlyFiles...
 pip uninstall onlyfiles -y
 
-:: Remove arquivos de cache
-echo Limpando cache...
+:: Remove cache files
+echo Cleaning cache...
 pip cache purge
 
 echo.
-echo Desinstalacao concluida!
+echo Uninstallation completed!
 pause 
