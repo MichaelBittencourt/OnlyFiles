@@ -5,7 +5,7 @@ import os
 class Logger:
     """Class for centralized logging configuration."""
 
-    LOG_FILE = 'app.log'  # Default log file name
+    LOG_FILE = '@app.log'  # Default log file name
     _configured = False  # Internal control for single configuration
 
     def __init__(self, name=__name__, verbose=False):

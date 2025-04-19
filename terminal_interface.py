@@ -75,8 +75,14 @@ class TerminalInterface:
         """Organizes files in the current directory."""
         console.print(f"\n[bold]Organizing files in:[/bold] {self.current_path}")
         try:
+            # Executar a organização
             self.execution.organize_all(self.current_path)
             console.print("[green]Files organized successfully![/green]")
+            
+            # Verificar se os logs foram registrados
+            log_content = self.logger.handle_logs('read')
+            if not log_content or "No logs found" in log_content:
+                self.logger.warning("No logs were generated during file organization")
         except Exception as e:
             error_msg = f"Error organizing files: {str(e)}"
             console.print(f"[red]{error_msg}[/red]")

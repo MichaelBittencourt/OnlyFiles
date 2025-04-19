@@ -9,17 +9,17 @@ Commands:
     --version       Show version information
 
 Options:
-    -d, --directory PATH    Directory to work with
-    -e, --extension        Organize files by extension
-    -t, --date            Organize files by date
-    -s, --size            Organize files by size
-    -y, --type            Organize files by type
-    -b, --backup          Create backup of files
-    -r, --revert          Revert to last backup
-    -m, --move            Move files
-    -v, --drives          List available drives
-    -l, --logs            View operation logs
-    -c, --clear-logs      Clear operation logs
+    -d, --directory PATH        Directory to work with
+    -e, --extension             Organize files by extension
+    -t, --date                  Organize files by date
+    -s, --size                  Organize files by size
+    -y, --type                  Organize files by type
+    -b, --backup                Create backup of files
+    -r, --revert                Revert to last backup
+    -m, --move                  Move files
+    -v, --drives                List available drives
+    -l, --logs                  View operation logs
+    -c, --clear-logs            Clear operation logs
 
 Examples:
     onlyfiles start     # Start the interactive terminal interface
