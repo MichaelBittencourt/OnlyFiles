@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #!/usr/bin/env python3
 """
 OnlyFiles - A powerful file management and backup CLI tool.

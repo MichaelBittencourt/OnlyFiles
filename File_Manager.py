@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import shutil
 from logger import Logger
@@ -12,28 +13,48 @@ class FileManager:
         self.__types = file_types
 
     def list_files(self, origin_path):
-        return os.listdir(origin_path)
+        """List files in a directory with UTF-8 encoding"""
+        try:
+            # UTF-8 handling for path
+            origin_path = origin_path.encode('utf-8').decode('utf-8')
+            files = os.listdir(origin_path)
+            # UTF-8 handling for filenames
+            return [f.encode('utf-8').decode('utf-8') for f in files]
+        except Exception as e:
+            self.__logger.error(f'Error listing files in {origin_path}: {str(e)}')
+            return []
 
     def __validate_paths(self, origin_path, destination_path):
         """Private method to validate source and destination paths"""
-        if not origin_path or not destination_path:
-            print("Error: Source or destination path is empty!")
-            return False
+        try:
+            # UTF-8 handling for paths
+            origin_path = origin_path.encode('utf-8').decode('utf-8')
+            destination_path = destination_path.encode('utf-8').decode('utf-8')
 
-        if os.path.abspath(origin_path) == os.path.abspath(destination_path):
-            print("Error: Destination folder cannot be the same as source folder.")
+            if not os.path.exists(origin_path):
+                raise FileNotFoundError(f"Source path does not exist: {origin_path}")
+            if not os.path.exists(destination_path):
+                os.makedirs(destination_path, exist_ok=True)
+            return True
+        except Exception as e:
+            self.__logger.error(f'Error validating paths: {str(e)}')
             return False
-
-        return True
 
     def __move_file(self, source_path, destination_path, file):
-        """Private method to centralize file movement logic"""
+        """Move a single file with UTF-8 handling"""
         try:
-            shutil.move(source_path, os.path.join(destination_path, file))
-            self.__logger.info(f'File "{file}" moved to folder "{destination_path}".')
+            source_file = os.path.join(source_path, file)
+            dest_file = os.path.join(destination_path, file)
+
+            # Tratamento UTF-8 para os caminhos completos
+            source_file = source_file.encode('utf-8').decode('utf-8')
+            dest_file = dest_file.encode('utf-8').decode('utf-8')
+
+            shutil.move(source_file, dest_file)
+            self.__logger.info(f'Moved: {file} to {destination_path}')
             return True
-        except Exception as error:
-            self.__logger.error(f'Error moving file "{file}": {error}')
+        except Exception as e:
+            self.__logger.error(f'Error moving file {file}: {str(e)}')
             return False
 
     def move_files_by_type(self, origin_path, destination_path, extensions_list):
@@ -124,6 +145,9 @@ class FileManager:
     def organize_by_extension(self, directory):
         """Organize files by their extensions"""
         try:
+            # Tratamento UTF-8 para o diretório
+            directory = directory.encode('utf-8').decode('utf-8')
+
             files = os.listdir(directory)
             for file in files:
                 if os.path.isfile(os.path.join(directory, file)):
@@ -144,6 +168,9 @@ class FileManager:
     def organize_by_date(self, directory):
         """Organize files by their creation date"""
         try:
+            # Tratamento UTF-8 para o diretório
+            directory = directory.encode('utf-8').decode('utf-8')
+
             files = os.listdir(directory)
             for file in files:
                 if os.path.isfile(os.path.join(directory, file)):
@@ -162,6 +189,9 @@ class FileManager:
     def organize_by_size(self, directory):
         """Organize files by their size"""
         try:
+            # Tratamento UTF-8 para o diretório
+            directory = directory.encode('utf-8').decode('utf-8')
+
             files = os.listdir(directory)
             for file in files:
                 if os.path.isfile(os.path.join(directory, file)):
@@ -192,6 +222,9 @@ class FileManager:
     def create_backup(self, directory):
         """Create a backup of the directory"""
         try:
+            # Tratamento UTF-8 para o diretório
+            directory = directory.encode('utf-8').decode('utf-8')
+
             backup_dir = os.path.join(directory, f"backup_{int(time.time())}")
             shutil.copytree(directory, backup_dir, dirs_exist_ok=True)
             self.__logger.info(f"Created backup at {backup_dir}")
@@ -203,6 +236,9 @@ class FileManager:
     def revert_backup(self, directory):
         """Revert to the most recent backup"""
         try:
+            # Tratamento UTF-8 para o diretório
+            directory = directory.encode('utf-8').decode('utf-8')
+
             # Find the most recent backup
             backups = [d for d in os.listdir(directory) if d.startswith("backup_")]
             if not backups:
@@ -242,6 +278,8 @@ class FileManager:
     def revert_file(self, log):
         """Revert a file based on a log"""
         try:
+            # Decodificar o log para lidar com caracteres especiais
+            log = log.encode('utf-8').decode('utf-8')
             parts = log.split('"')
             if len(parts) >= 5:
                 filename = parts[1]

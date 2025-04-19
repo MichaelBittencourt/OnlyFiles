@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
 from rich.console import Console
@@ -52,17 +53,23 @@ class TerminalInterface:
         console.print("5. Exit")
         print()
 
+    def get_user_input(self, prompt):
+        """Get user input with UTF-8 handling"""
+        try:
+            user_input = input(prompt)
+            return user_input.encode('utf-8').decode('utf-8')
+        except Exception as e:
+            self.logger.error(f"Error processing user input: {str(e)}")
+            return ""
+
     def get_user_choice(self):
-        """Gets user choice."""
-        while True:
-            try:
-                choice = input("Choose an option [1/2/3/4/5]: ")
-                if choice in ['1', '2', '3', '4', '5']:
-                    return choice
-                console.print("[red]Invalid option. Please choose between 1 and 5.[/red]")
-            except KeyboardInterrupt:
-                print("\nOperation cancelled by user.")
-                sys.exit(0)
+        """Get user choice with UTF-8 handling"""
+        try:
+            choice = self.get_user_input("\nEnter your choice: ")
+            return choice.strip()
+        except Exception as e:
+            self.logger.error(f"Error getting user choice: {str(e)}")
+            return ""
 
     def organize_current_directory(self):
         """Organizes files in the current directory."""
@@ -147,7 +154,7 @@ class TerminalInterface:
                     error_msg = f"Error: {str(e)}"
                     console.print(f"[red]{error_msg}[/red]")
                     self.logger.error(error_msg)
-                input("\nPressione Enter para continuar...")
+                input("\nPress Enter to continue...")
                 return
 
             try:
@@ -165,10 +172,10 @@ class TerminalInterface:
                         current_path = new_path
                 else:
                     console.print("[red]Invalid option![/red]")
-                    input("\nPressione Enter para continuar...")
+                    input("\nPress Enter to continue...")
             except ValueError:
                 console.print("[red]Invalid option![/red]")
-                input("\nPressione Enter para continuar...")
+                input("\nPress Enter to continue...")
 
     def __show_message_and_wait(self, message, color="yellow"):
         """Private method to show message and wait for user input"""

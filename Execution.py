@@ -4,7 +4,7 @@ from File_Manager import FileManager
 from file_types import file_types
 
 class Execution:
-    """Classe que executa e organiza a classe FileManager"""
+    """Class that executes and organizes the FileManager class"""
 
     def __init__(self, logger):
         self.__logger = logger
