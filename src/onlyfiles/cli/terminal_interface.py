@@ -272,15 +272,7 @@ class TerminalInterface:
 
     def revert_last_operation(self):
         """Revert the last file operation"""
-        logs = self.file_manager.read_logs()
-        move_logs = self.file_manager.get_move_logs(logs)
-
-        if not move_logs:
-            self.__show_message_and_wait("No operations to revert")
-            return
-
-        last_log = move_logs[-1]
-        if self.file_manager.revert_file(last_log):
+        if self.file_manager.revert_last_action():
             self.__show_message_and_wait("Operation reverted successfully", "green")
         else:
             self.__show_message_and_wait("Failed to revert operation", "red")

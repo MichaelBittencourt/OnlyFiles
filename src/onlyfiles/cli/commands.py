@@ -98,7 +98,7 @@ def cli(ctx, help: bool = False, directory: Optional[str] = None, extension: boo
                 return
 
             if not directory:
-                __show_error("Directory (-d) is required for file operations")
+                __show_error("Error: Directory not specified. Use --directory or -d to specify a directory.")
                 return
 
             if extension:
@@ -117,8 +117,14 @@ def cli(ctx, help: bool = False, directory: Optional[str] = None, extension: boo
                 return
 
             if type:
-                execution.organize_all(directory)
-                __show_success(f"Files organized successfully in {directory}")
+                if not directory:
+                    __show_error("Error: Directory not specified. Use --directory or -d to specify a directory.")
+                    return
+                result = file_manager.organize_by_type(directory)
+                if result:
+                    __show_success(f"Files organized by type in {directory}")
+                else:
+                    __show_error("Failed to organize files by type")
                 return
 
             if backup:

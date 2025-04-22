@@ -3,6 +3,7 @@ import os
 from onlyfiles.cli.terminal_interface import TerminalInterface
 from onlyfiles.utils.logger import Logger
 from onlyfiles.utils.help_manager import HelpManager
+from onlyfiles.cli.commands import cli
 
 def print_help():
     """
@@ -32,9 +33,11 @@ def main():
         interface = TerminalInterface()
         interface.start()
     else:
-        print("Error: Unknown command or option")
-        print_help()
-        sys.exit(1)
+        try:
+            cli()
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            sys.exit(1)
 
 if __name__ == "__main__":
     main() 

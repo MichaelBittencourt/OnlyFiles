@@ -11,7 +11,7 @@ class FileManager:
     def __init__(self, logger):
         self.__logger = logger
         self.__types = file_types
-        self.__excluded_files = [os.path.basename(Logger.LOG_FILE)]  # Exclude the log file from operations
+        self.__excluded_files = [os.path.basename(Logger.LOG_FILE)]  # Exclude the log file carts operations
         self.__excluded_dirs = []
 
     def add_excluded_directory(self, directory):
@@ -284,6 +284,41 @@ class FileManager:
             self.__logger.error(f"Error organizing by size: {str(e)}")
             return False
 
+    def organize_by_type(self, directory):
+        """Organize files by their type (e.g., documents, images, videos, etc.)"""
+        try:
+            # UTF-8 handling for directory
+            directory = directory.encode('utf-8').decode('utf-8')
+
+            files = os.listdir(directory)
+            for file in files:
+                file_path = os.path.join(directory, file)
+                
+                # Ignore excluded files and directories
+                if self.__is_excluded(file_path) or not os.path.isfile(file_path):
+                    continue
+                    
+                # Get file extension
+                _, ext = os.path.splitext(file)
+                ext = ext.lower()
+
+                # Determine file type based on extension
+                file_type = "others"  # Default type
+                for type_name, extensions in self.__types.items():
+                    if ext in extensions:
+                        file_type = type_name
+                        break
+
+                # Create type directory and move file
+                type_dir = os.path.join(directory, file_type)
+                os.makedirs(type_dir, exist_ok=True)
+                shutil.move(file_path, os.path.join(type_dir, file))
+                self.__logger.info(f"Moved {file} to {type_dir}")
+            return True
+        except Exception as e:
+            self.__logger.error(f"Error organizing by type: {str(e)}")
+            return False
+
     def create_backup(self, directory):
         """Create a backup of the directory"""
         try:
@@ -404,3 +439,64 @@ class FileManager:
         except Exception as e:
             self.__logger.error(f'Error reverting operation: {str(e)}')
         return False
+
+    def revert_last_action(self):
+        """Revert the last complete file movement action based on logs"""
+        try:
+            # Read all logs
+            logs = self.read_logs()
+            if not logs:
+                self.__logger.warning("No logs found for reversion.")
+                return False
+
+            # Filter move-related logs
+            move_logs = self.get_move_logs(logs)
+            if not move_logs:
+                self.__logger.warning("No move logs found for reversion.")
+                return False
+
+            # Reverse logs to process the most recent first
+            move_logs.reverse()
+
+            # Group logs by action (assuming logs from the same action are consecutive)
+            # We consider logs within a short time window (e.g., 5 seconds) as part of the same action
+            last_action_logs = []
+            last_timestamp = None
+            time_threshold = 5  # Seconds
+
+            for log in move_logs:
+                # Extract timestamp from log (format: 'YYYY-MM-DD HH:MM:SS - name - level - message')
+                try:
+                    timestamp_str = log.split(' - ')[0].strip()
+                    timestamp = datetime.strptime(timestamp_str, '%Y-%m-%d %H:%M:%S')
+                except (IndexError, ValueError):
+                    continue  # Skip logs with invalid format
+
+                if last_timestamp is None:
+                    last_timestamp = timestamp
+                    last_action_logs.append(log)
+                elif (last_timestamp - timestamp).total_seconds() <= time_threshold:
+                    last_action_logs.append(log)
+                else:
+                    break  # Found a gap, stop grouping
+
+            if not last_action_logs:
+                self.__logger.warning("No valid logs found for the last action.")
+                return False
+
+            # Revert each file in the last action in reverse order
+            success = True
+            for log in reversed(last_action_logs):
+                if not self.revert_file(log):
+                    success = False
+                    self.__logger.error(f"Failed to revert part of the last action: {log}")
+
+            if success:
+                self.__logger.info("Successfully reverted the last action.")
+            else:
+                self.__logger.warning("Last action partially reverted due to errors.")
+            return success
+
+        except Exception as e:
+            self.__logger.error(f"Error reverting last action: {str(e)}")
+            return False
