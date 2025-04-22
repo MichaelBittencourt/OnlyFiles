@@ -1,29 +1,28 @@
 @echo off
 echo Installing OnlyFiles...
-
-:: Check if Python is installed
-python --version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo Python not found. Please install Python 3.8 or higher.
+cd /d %~dp0..
+python -m pip install --upgrade pip
+if errorlevel 1 (
+    echo Failed to upgrade pip
+    pause
     exit /b 1
 )
 
-:: Check if pip is installed
-pip --version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo Pip not found. Please install pip.
+python -m pip install -r requirements.txt
+if errorlevel 1 (
+    echo Failed to install requirements
+    pause
     exit /b 1
 )
 
-:: Install dependencies
-echo Installing dependencies...
-pip install -r requirements.txt
+python -m pip install -e .
+if errorlevel 1 (
+    echo Failed to install package
+    pause
+    exit /b 1
+)
 
-:: Install the package
-echo Installing OnlyFiles...
-pip install .
-
-echo.
-echo Installation completed! You can now use the 'onlyfiles' command.
+echo Installation completed successfully!
+echo You can now use the 'onlyfiles' command.
 echo To see the help, type: onlyfiles --help
-pause 
+pause
