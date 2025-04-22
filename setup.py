@@ -3,8 +3,8 @@ import os
 
 def read_requirements():
     """Reads dependencies from requirements.txt file"""
-    with open('requirements.txt') as req:
-        return [line.strip() for line in req if line.strip() and not line.startswith('#')]
+    with open('requirements.txt', 'r') as f:
+        return [line.strip() for line in f if line.strip() and not line.startswith('#')]
 
 def read_file(filename):
     """Reads the content of a file"""
@@ -29,9 +29,9 @@ setup(
     package_dir={'': 'src'},
     packages=find_packages(where='src'),
     include_package_data=True,
-    data_files=[
-        ('docs', ['docs/help.txt', 'requirements.txt']),
-    ],
+    package_data={
+        'onlyfiles': ['docs/*.txt'],
+    },
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: End Users/Desktop",
