@@ -11,30 +11,30 @@ class FileManager:
     def __init__(self, logger):
         self.__logger = logger
         self.__types = file_types
-        self.__excluded_files = [os.path.basename(Logger.LOG_FILE)]  # Excluir o arquivo de log das operações
+        self.__excluded_files = [os.path.basename(Logger.LOG_FILE)]  # Exclude the log file from operations
         self.__excluded_dirs = []
 
     def add_excluded_directory(self, directory):
-        """Adiciona um diretório à lista de diretórios excluídos das operações de movimentação"""
+        """Add a directory to the list of directories excluded from move operations"""
         if os.path.isdir(directory) and directory not in self.__excluded_dirs:
             self.__excluded_dirs.append(directory)
             return True
         return False
 
     def add_excluded_file(self, file_name):
-        """Adiciona um arquivo à lista de arquivos excluídos das operações de movimentação"""
+        """Add a file to the list of files excluded from move operations"""
         if file_name not in self.__excluded_files:
             self.__excluded_files.append(file_name)
             return True
         return False
 
     def __is_excluded(self, file_path):
-        """Verifica se um arquivo ou diretório deve ser excluído das operações"""
-        # Verificar se é um dos arquivos excluídos
+        """Check if a file or directory should be excluded from operations"""
+        # Check if it is one of the excluded files
         if os.path.basename(file_path) in self.__excluded_files:
             return True
         
-        # Verificar se está em um diretório excluído
+        # Check if it is in an excluded directory
         for excluded_dir in self.__excluded_dirs:
             if os.path.abspath(file_path).startswith(os.path.abspath(excluded_dir)):
                 return True
@@ -57,13 +57,15 @@ class FileManager:
         """Private method to validate source and destination paths"""
         try:
             # UTF-8 handling for paths
-            origin_path = origin_path.encode('utf-8').decode('utf-8')
-            destination_path = destination_path.encode('utf-8').decode('utf-8')
+            origin_path = os.path.abspath(origin_path.encode('utf-8').decode('utf-8'))
+            destination_path = os.path.abspath(destination_path.encode('utf-8').decode('utf-8'))
 
             if not os.path.exists(origin_path):
                 raise FileNotFoundError(f"Source path does not exist: {origin_path}")
-            if not os.path.exists(destination_path):
-                os.makedirs(destination_path, exist_ok=True)
+            
+            # Create destination directory and all parent directories if they don't exist
+            os.makedirs(destination_path, exist_ok=True)
+            
             return True
         except Exception as e:
             self.__logger.error(f'Error validating paths: {str(e)}')
@@ -75,23 +77,40 @@ class FileManager:
             source_file = os.path.join(source_path, file)
             dest_file = os.path.join(destination_path, file)
             
-            # Verificar se é um arquivo excluído
+            # Check if it is an excluded file
             if self.__is_excluded(source_file):
-                self.__logger.info(f'Arquivo "{file}" ignorado (na lista de exclusão).')
+                self.__logger.info(f'File "{file}" ignored (in exclusion list).')
                 return False
 
-            # Tratamento UTF-8 para os caminhos completos
+            # Check if the source file exists
+            if not os.path.exists(source_file):
+                self.__logger.warning(f'File "{file}" not found in {source_path}.')
+                return False
+
+            # Check write permissions in the destination
+            if not os.access(destination_path, os.W_OK):
+                self.__logger.error(f'No write permission in {destination_path}.')
+                return False
+
+            # UTF-8 handling for full paths
             source_file = source_file.encode('utf-8').decode('utf-8')
             dest_file = dest_file.encode('utf-8').decode('utf-8')
 
             shutil.move(source_file, dest_file)
-            self.__logger.info(f'Arquivo "{file}" movido para a pasta "{destination_path}".')
+            self.__logger.info(f'File "{file}" moved to folder "{destination_path}".')
             return True
+        except PermissionError as e:
+            self.__logger.error(f'Permission error moving file {file}: {str(e)}')
+            return False
+        except OSError as e:
+            self.__logger.error(f'System error moving file {file}: {str(e)}')
+            return False
         except Exception as e:
             self.__logger.error(f'Error moving file {file}: {str(e)}')
             return False
 
     def move_files_by_type(self, origin_path, destination_path, extensions_list):
+        """Move files of specified types to the destination folder"""
         if not self.__validate_paths(origin_path, destination_path):
             return
 
@@ -125,7 +144,7 @@ class FileManager:
                             os.makedirs(destination_path, exist_ok=True)
                             found_files = True
 
-                        self.__move_file(path_file, destination_path, file)
+                        self.__move_file(origin_path, destination_path, file)
                         break
             else:
                 print(f'"{file}" is not a file, ignoring.')
@@ -133,6 +152,13 @@ class FileManager:
     def move_other_files(self, origin_path, destination_path, types_dict):
         """Move files that don't fit into any category to the Others folder"""
         if not self.__validate_paths(origin_path, destination_path):
+            return
+        
+        # Create the "Others" folder immediately after path validation
+        try:
+            os.makedirs(destination_path, exist_ok=True)
+        except Exception as e:
+            self.__logger.error(f'Error creating "Others" folder in {destination_path}: {str(e)}')
             return
 
         # List all files from source
@@ -150,9 +176,6 @@ class FileManager:
         for ext_list in types_dict.values():
             known_extensions.update(ext.lower() for ext in ext_list)
 
-        # Flag to check if found files of the type
-        found_files = False
-
         for file in files:
             # Ignore destination folder if it already exists
             if file == destination_folder_name:
@@ -167,26 +190,21 @@ class FileManager:
 
                 # If extension is not in any known category
                 if ext.lower() not in known_extensions:
-                    # Create folder only if found the first unlisted file
-                    if not found_files:
-                        os.makedirs(destination_path, exist_ok=True)
-                        found_files = True
-
-                    self.__move_file(path_file, destination_path, file)
+                    self.__move_file(origin_path, destination_path, file)
             else:
                 print(f'"{file}" is not a file, ignoring.')
 
     def organize_by_extension(self, directory):
         """Organize files by their extensions"""
         try:
-            # Tratamento UTF-8 para o diretório
+            # UTF-8 handling for directory
             directory = directory.encode('utf-8').decode('utf-8')
 
             files = os.listdir(directory)
             for file in files:
                 file_path = os.path.join(directory, file)
                 
-                # Ignorar arquivos excluídos e diretórios
+                # Ignore excluded files and directories
                 if self.__is_excluded(file_path) or not os.path.isfile(file_path):
                     continue
                     
@@ -207,14 +225,14 @@ class FileManager:
     def organize_by_date(self, directory):
         """Organize files by their creation date"""
         try:
-            # Tratamento UTF-8 para o diretório
+            # UTF-8 handling for directory
             directory = directory.encode('utf-8').decode('utf-8')
 
             files = os.listdir(directory)
             for file in files:
                 file_path = os.path.join(directory, file)
                 
-                # Ignorar arquivos excluídos e diretórios
+                # Ignore excluded files and directories
                 if self.__is_excluded(file_path) or not os.path.isfile(file_path):
                     continue
                     
@@ -232,14 +250,14 @@ class FileManager:
     def organize_by_size(self, directory):
         """Organize files by their size"""
         try:
-            # Tratamento UTF-8 para o diretório
+            # UTF-8 handling for directory
             directory = directory.encode('utf-8').decode('utf-8')
 
             files = os.listdir(directory)
             for file in files:
                 file_path = os.path.join(directory, file)
                 
-                # Ignorar arquivos excluídos e diretórios
+                # Ignore excluded files and directories
                 if self.__is_excluded(file_path) or not os.path.isfile(file_path):
                     continue
                     
@@ -269,7 +287,7 @@ class FileManager:
     def create_backup(self, directory):
         """Create a backup of the directory"""
         try:
-            # Tratamento UTF-8 para o diretório
+            # UTF-8 handling for directory
             directory = directory.encode('utf-8').decode('utf-8')
 
             backup_dir = os.path.join(directory, f"backup_{int(time.time())}")
@@ -283,7 +301,7 @@ class FileManager:
     def revert_backup(self, directory):
         """Revert to the most recent backup"""
         try:
-            # Tratamento UTF-8 para o diretório
+            # UTF-8 handling for directory
             directory = directory.encode('utf-8').decode('utf-8')
 
             # Find the most recent backup
@@ -317,73 +335,72 @@ class FileManager:
             with open(Logger.LOG_FILE, 'r', encoding='utf-8') as f:
                 return f.readlines()
         except FileNotFoundError:
-            self.__logger.warning(f"Arquivo de log não encontrado em {Logger.LOG_FILE}")
+            self.__logger.warning(f"Log file not found at {Logger.LOG_FILE}")
             return []
         except Exception as e:
-            self.__logger.error(f"Erro ao ler o arquivo de log: {str(e)}")
+            self.__logger.error(f"Error reading log file: {str(e)}")
             return []
 
     def get_move_logs(self, logs):
         """Filter file movement logs"""
-        # Verificar todos os formatos possíveis de log de movimentação
+        # Check all possible log formats for file movements
         move_logs = []
         for log in logs:
-            if any(pattern in log for pattern in ['movido para a pasta', 'Arquivo "', 'Moved']):
+            if any(pattern in log for pattern in ['moved to folder', 'File "', 'Moved']):
                 move_logs.append(log)
         return move_logs
 
     def revert_file(self, log):
         """Revert a file based on a log"""
         try:
-            # Decodificar o log para lidar com caracteres especiais
+            # Decode log to handle special characters
             log = log.encode('utf-8').decode('utf-8')
             
-            # Detectar o formato da mensagem de log
-            if 'Arquivo "' in log and 'movido para a pasta' in log:
-                # Formato: 'Arquivo "nome_arquivo" movido para a pasta "caminho_destino".'
+            # Detect log message format
+            if 'File "' in log and 'moved to folder' in log:
+                # Format: 'File "filename" moved to folder "destination_path".'
                 parts = log.split('"')
                 if len(parts) >= 5:
                     filename = parts[1]
                     destination = parts[3]
                     
-                    # O destino é o diretório completo
+                    # The destination is the full directory
                     source_path = os.path.join(destination, filename)
                     
-                    # O destino original é o diretório pai
-                    # Usamos dirname uma vez para voltar ao diretório original
+                    # The original destination is the parent directory
                     parent_dir = os.path.dirname(destination)
                     target_path = os.path.join(parent_dir, filename)
                     
                     if os.path.exists(source_path):
                         shutil.move(source_path, target_path)
-                        self.__logger.info(f'Arquivo "{filename}" revertido para "{parent_dir}".')
+                        self.__logger.info(f'File "{filename}" reverted to "{parent_dir}".')
                         return True
                     else:
-                        self.__logger.warning(f'Arquivo {filename} não encontrado em {destination}')
+                        self.__logger.warning(f'File {filename} not found in {destination}')
             elif 'Moved' in log:
-                # Formato: 'Moved nome_arquivo to caminho_destino'
+                # Format: 'Moved filename to destination_path'
                 parts = log.split('Moved ')[1].split(' to ')
                 if len(parts) == 2:
                     filename = parts[0].strip()
                     destination = parts[1].strip()
                     
-                    # O destino é o diretório completo
+                    # The destination is the full directory
                     source_path = os.path.join(destination, filename)
                     
-                    # O destino original é o diretório pai
+                    # The original destination is the parent directory
                     parent_dir = os.path.dirname(destination)
                     target_path = os.path.join(parent_dir, filename)
                     
                     if os.path.exists(source_path):
                         shutil.move(source_path, target_path)
-                        self.__logger.info(f'Arquivo "{filename}" revertido para "{parent_dir}".')
+                        self.__logger.info(f'File "{filename}" reverted to "{parent_dir}".')
                         return True
                     else:
-                        self.__logger.warning(f'Arquivo {filename} não encontrado em {destination}')
+                        self.__logger.warning(f'File {filename} not found in {destination}')
             else:
-                # Formato não reconhecido
-                self.__logger.warning('Formato de log não reconhecido para reversão')
+                # Unrecognized log format
+                self.__logger.warning('Unrecognized log format for reversion')
                 
         except Exception as e:
-            self.__logger.error(f'Erro ao reverter operação: {str(e)}')
+            self.__logger.error(f'Error reverting operation: {str(e)}')
         return False
