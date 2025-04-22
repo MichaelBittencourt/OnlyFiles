@@ -1,7 +1,7 @@
 import os
-from logger import Logger
-from File_Manager import FileManager
-from file_types import file_types
+from onlyfiles.utils.logger import Logger
+from onlyfiles.core.file_manager import FileManager
+from onlyfiles.core.file_types import file_types
 
 class Execution:
     """Class that executes and organizes the FileManager class"""

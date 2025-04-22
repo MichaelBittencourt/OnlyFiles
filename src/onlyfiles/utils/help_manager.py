@@ -5,7 +5,7 @@ class HelpManager:
     """Class responsible for managing and providing centralized help information."""
     
     def __init__(self):
-        self.help_file = os.path.join(os.path.dirname(__file__), 'doc', 'help.txt')
+        self.help_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'docs', 'help.txt')
         self._help_content = self._load_help_content()
         self._commands = self._parse_commands()
         self._options = self._parse_options()

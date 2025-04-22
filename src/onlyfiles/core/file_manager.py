@@ -313,7 +313,7 @@ class FileManager:
     def read_logs(self):
         """Read log file content"""
         try:
-            from logger import Logger
+            from onlyfiles.utils.logger import Logger
             with open(Logger.LOG_FILE, 'r', encoding='utf-8') as f:
                 return f.readlines()
         except FileNotFoundError:

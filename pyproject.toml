@@ -3,7 +3,7 @@ name = "onlyfiles"
 version = "1.0.0"
 description = "CLI for file management"
 authors = ["Group 05 - OnlyFiles"]
-packages = [{include = "*"}]
+packages = [{include = "onlyfiles", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -12,7 +12,7 @@ rich = "^13.7.0"
 pathlib = "^1.0.1"
 
 [tool.poetry.scripts]
-onlyfiles = "main:main"
+onlyfiles = "onlyfiles.cli_app:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

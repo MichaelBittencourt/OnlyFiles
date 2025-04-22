@@ -1,8 +1,8 @@
 import sys
 import os
-from terminal_interface import TerminalInterface
-from logger import Logger
-from help_manager import HelpManager
+from onlyfiles.cli.terminal_interface import TerminalInterface
+from onlyfiles.utils.logger import Logger
+from onlyfiles.utils.help_manager import HelpManager
 
 def print_help():
     """
