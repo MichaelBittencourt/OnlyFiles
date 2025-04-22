@@ -13,7 +13,7 @@ def read_file(filename):
 
 # Read the content of help.txt file
 def read_help_file():
-    help_file_path = os.path.join(os.path.dirname(__file__), 'Documents', 'help.txt')
+    help_file_path = os.path.join(os.path.dirname(__file__), 'doc', 'help.txt')
     with open(help_file_path, 'r', encoding='utf-8') as f:
         return f.read()
 

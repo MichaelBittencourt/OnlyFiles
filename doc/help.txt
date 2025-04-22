@@ -1,0 +1,30 @@
+OnlyFiles - Ferramenta de gerenciamento de arquivos
+
+Uso: onlyfiles [OPÇÃO]... [COMANDO]...
+
+Commands:
+start       Inicia a interface interativa
+
+Options:
+--help, -h  Mostra esta mensagem de ajuda
+--version   Mostra a versão do programa
+--directory, -d [PATH]  Diretório para trabalhar
+--extension, -e  Organiza por extensão
+--date, -t  Organiza por data
+--size, -s  Organiza por tamanho
+--type, -y  Organiza por tipo
+--backup, -b  Cria backup dos arquivos
+--revert, -r  Reverte para o último backup
+--move, -m  Move arquivos
+--drives, -v  Lista unidades disponíveis
+--logs, -l  Visualiza logs de operações
+--clear-logs, -c  Limpa logs de operações
+
+Examples:
+onlyfiles --directory ~/Downloads --extension  # Organiza arquivos por extensão
+onlyfiles --directory ~/doc --type       # Organiza arquivos por tipo
+onlyfiles --directory ~/Pictures --backup      # Cria backup dos arquivos
+onlyfiles --logs                               # Visualiza logs
+onlyfiles start                                # Inicia interface interativa
+
+Para mais informações, visite: https://github.com/MichaelBittencourt/OnlyFiles 
