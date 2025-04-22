@@ -13,7 +13,7 @@ def read_file(filename):
 
 # Read the content of help.txt file
 def read_help_file():
-    help_file_path = os.path.join(os.path.dirname(__file__), 'doc', 'help.txt')
+    help_file_path = os.path.join(os.path.dirname(__file__), 'docs', 'help.txt')
     with open(help_file_path, 'r', encoding='utf-8') as f:
         return f.read()
 
@@ -26,10 +26,11 @@ setup(
     long_description=read_help_file(),
     long_description_content_type="text/plain",
     url="https://github.com/MichaelBittencourt/OnlyFiles",
-    packages=find_packages(include=['*']),
+    package_dir={'': 'src'},
+    packages=find_packages(where='src'),
     include_package_data=True,
     data_files=[
-        ('', ['help.txt', 'requirements.txt']),
+        ('docs', ['docs/help.txt', 'requirements.txt']),
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -46,7 +47,7 @@ setup(
     install_requires=read_requirements(),
     entry_points={
         "console_scripts": [
-            "onlyfiles=main:main",
+            "onlyfiles=onlyfiles.main:main",
         ],
     },
 ) 

@@ -6,10 +6,11 @@ from typing import Optional
 import sys
 import os
 
-from logger import Logger
-from File_Manager import FileManager
-from Execution import Execution
-from help_manager import HelpManager
+from onlyfiles.utils.logger import Logger
+from onlyfiles.core.file_manager import FileManager
+from onlyfiles.core.execution import Execution
+from onlyfiles.utils.help_manager import HelpManager
+from onlyfiles.cli.terminal_interface import TerminalInterface
 
 # Initialize console
 console = Console()
@@ -28,8 +29,8 @@ def __show_warning(message: str):
     console.print(f"[yellow]{message}[/yellow]")
 
 # Modifying the main group to not require subcommands
-@click.group(invoke_without_command=True, context_settings=dict(help_option_names=[]))
-@click.version_option(version="1.0.0", prog_name="OnlyFiles")
+@click.group(invoke_without_command=True, context_settings=dict(help_option_names=['-h', '--help']))
+@click.version_option('1.0.0', '--version', prog_name="OnlyFiles", message="%(prog)s, version %(version)s")
 @click.option('--help', '-h', is_flag=True, help='Show this help message')
 @click.option('--directory', '-d', type=click.Path(exists=True, file_okay=False, dir_okay=True), help='Directory to work with')
 @click.option('--extension', '-e', is_flag=True, help='Organize by extension')
@@ -39,7 +40,7 @@ def __show_warning(message: str):
 @click.option('--backup', '-b', is_flag=True, help='Create backup of files')
 @click.option('--revert', '-r', is_flag=True, help='Revert to last backup')
 @click.option('--move', '-m', is_flag=True, help='Move files')
-@click.option('--drives', '-v', is_flag=True, help='List available drives')
+@click.option('--drives', is_flag=True, help='List available drives')
 @click.option('--logs', '-l', is_flag=True, help='View operation logs')
 @click.option('--clear-logs', '-c', is_flag=True, help='Clear operation logs')
 @click.pass_context
@@ -59,7 +60,7 @@ def cli(ctx, help: bool = False, directory: Optional[str] = None, extension: boo
     """
     try:
         # Initialize logger and execution
-        logger = Logger("OnlyFiles", True)
+        logger = Logger("OnlyFiles")
         execution = Execution(logger)
         file_manager = FileManager(logger)
 
@@ -142,6 +143,5 @@ def cli(ctx, help: bool = False, directory: Optional[str] = None, extension: boo
 @cli.command()
 def start():
     """Start the interactive terminal interface"""
-    from terminal_interface import TerminalInterface
     interface = TerminalInterface()
     interface.start() 

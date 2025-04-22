@@ -5,8 +5,8 @@ OnlyFiles - A powerful file management and backup CLI tool.
 """
 
 import sys
-from commands import cli
-from logger import Logger
+from onlyfiles.cli.commands import cli
+from onlyfiles.utils.logger import Logger
 
 # Initialize logger
 logger = Logger("OnlyFiles", True)

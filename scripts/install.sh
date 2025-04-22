@@ -14,6 +14,13 @@ if ! command -v pip3 &> /dev/null; then
     exit 1
 fi
 
+# Get the directory where the script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+# Change to project directory
+cd "$PROJECT_DIR"
+
 # Install dependencies
 echo "Installing dependencies..."
 pip3 install -r requirements.txt --break-system-packages

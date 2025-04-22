@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 import shutil
-from logger import Logger
-from file_types import file_types
+from onlyfiles.utils.logger import Logger
+from onlyfiles.core.file_types import file_types
 from datetime import datetime
 import time
 

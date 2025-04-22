@@ -2,6 +2,13 @@
 
 echo "Desinstalando OnlyFiles..."
 
+# Get the directory where the script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+# Change to project directory
+cd "$PROJECT_DIR"
+
 # Remove o pacote Python
 pip3 uninstall onlyfiles -y --break-system-packages
 

@@ -3,9 +3,9 @@ import os
 import sys
 from rich.console import Console
 from rich.panel import Panel
-from logger import Logger
-from Execution import Execution
-from File_Manager import FileManager
+from onlyfiles.utils.logger import Logger
+from onlyfiles.core.execution import Execution
+from onlyfiles.core.file_manager import FileManager
 
 console = Console()
 

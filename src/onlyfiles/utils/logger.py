@@ -14,17 +14,13 @@ class Logger:
         # Usando o logger centralizado
         logger = Logger()
         logger.info("Mensagem de informação")
-        
-        # Habilitando saída para console também
-        logger_verbose = Logger(verbose=True)
-        logger_verbose.info("Log no arquivo e no console")
     """
     
     # Dictionary to track configured loggers
     _configured_loggers = {}
     
     # Default log file path
-    LOG_FILE = os.path.join(os.path.expanduser('~'), '.local', 'share', 'onlyfiles', 'logs', 'app.log')
+    LOG_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'docs', 'app.log')
     
     # Define property methods first to ensure they're properly recognized
     @property
@@ -33,11 +29,8 @@ class Logger:
         Get the log directory path.
         Returns the full path to the directory where logs are stored.
         """
-        print(f"DEBUG: Accessing log_dir property, self._log_dir = {getattr(self, '_log_dir', 'NOT FOUND')}")
         if not hasattr(self, '_log_dir'):
-            print("WARNING: _log_dir attribute is missing!")
-            self._log_dir = os.path.expanduser('~')
-            print(f"Created fallback _log_dir: {self._log_dir}")
+            self._log_dir = os.path.dirname(Logger.LOG_FILE)
         return self._log_dir
 
     @property
@@ -46,15 +39,7 @@ class Logger:
         Get the log file path.
         Returns the full path to the log file.
         """
-        print(f"DEBUG: Accessing log_file property, self._log_file = {getattr(self, '_log_file', 'NOT FOUND')}")
-        if not hasattr(self, '_log_file'):
-            print("WARNING: _log_file attribute is missing!")
-            if hasattr(self, '_log_dir'):
-                self._log_file = os.path.join(self._log_dir, 'app.log')
-            else:
-                self._log_file = os.path.join(os.path.expanduser('~'), 'app.log')
-            print(f"Created fallback _log_file: {self._log_file}")
-        return self._log_file
+        return Logger.LOG_FILE
 
     def __init__(self, name=__name__, verbose=False):
         """
@@ -62,23 +47,18 @@ class Logger:
 
         Parameters:
         name (str): Logger name (default: current module name)
-        verbose (bool): Whether to log to console as well (default: False)
+        verbose (bool): Ignored - logs are always shown in console and saved to file
         """
         # Initialize important attributes first
         self._name = name
         self._configured = False
-        self.__verbose = verbose
         self.logger = logging.getLogger(name)
         
         # Initialize log path attributes and verify
-        self._log_dir = None
-        self._log_file = None
+        self._log_dir = os.path.dirname(Logger.LOG_FILE)
+        self._log_file = Logger.LOG_FILE
         
         try:
-            # Get log directory based on OS
-            self._log_dir = self._get_log_directory()            
-            self._log_file = os.path.join(self._log_dir, 'app.log')
-            
             # Validate access through properties
             try:
                 dir_property = self.log_dir
@@ -197,51 +177,35 @@ class Logger:
     
     def _setup_logging(self):
         """
-        Configure handlers for the logger: file and optional console.
-        
-        Notes:
-        - Configures file handler to log to LOG_FILE
-        - If __verbose=True, also adds a console handler
+        Configure logging to both file and console.
         """
-        # Set logging level
-        self.logger.setLevel(logging.INFO)
+        # Clear any existing handlers
+        self.logger.handlers = []
         
-        # Clear any existing handlers to avoid duplicates
-        if self.logger.handlers:
-            for handler in self.logger.handlers:
-                self.logger.removeHandler(handler)
+        # Set the logging level
+        self.logger.setLevel(logging.DEBUG)
         
-        # Create formatter for consistent log format
-        log_formatter = logging.Formatter(
-            '%(asctime)s - %(levelname)s - %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S')
+        # Create formatters
+        file_formatter = logging.Formatter(
+            '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S'
+        )
         
-        # Add file handler if we have a valid log file path
-        try:
-            print(f"Setting up file handler with path: {self._log_file}")
-            # Check if directory exists before creating handler
-            log_dir = os.path.dirname(self._log_file)
-            if not os.path.exists(log_dir):
-                print(f"Creating log directory: {log_dir}")
-                os.makedirs(log_dir, exist_ok=True)
-                
-            file_handler = logging.FileHandler(self._log_file, encoding='utf-8')
-            file_handler.setFormatter(log_formatter)
-            self.logger.addHandler(file_handler)
-            print(f"File handler added successfully to {self._name}")
-        except Exception as e:
-            print(f"WARNING: Failed to create file handler: {str(e)}")
-            
-        # Add console handler if verbose mode is enabled
-        if self.__verbose:
-            print(f"Setting up console handler (verbose mode)")
-            console_handler = logging.StreamHandler()
-            console_handler.setFormatter(log_formatter)
-            self.logger.addHandler(console_handler)
-            print(f"Console handler added successfully")
-            
-        # Prevent propagation to root logger
-        self.logger.propagate = False
+        # Create and configure file handler
+        file_handler = logging.FileHandler(self._log_file, encoding='utf-8')
+        file_handler.setLevel(logging.DEBUG)
+        file_handler.setFormatter(file_formatter)
+        
+        # Create and configure console handler
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(logging.DEBUG)
+        console_handler.setFormatter(file_formatter)
+        
+        # Add handlers to logger
+        self.logger.addHandler(file_handler)
+        self.logger.addHandler(console_handler)
+        
+        self._configured = True
 
     def info(self, message):
         """Log message with UTF-8 handling"""
