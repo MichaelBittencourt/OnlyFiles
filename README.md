@@ -223,3 +223,5 @@ OnlyFiles é construído com uma arquitetura modular:
 ### Licença
 
 Este projeto está licenciado sob a Licença MIT - consulte o arquivo [LICENSE](LICENSE) para obter detalhes.
+
+![Demonstração do OnlyFiles](https://imgur.com/a/i7bGa33)
