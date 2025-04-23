@@ -113,7 +113,7 @@ OnlyFiles is built with a modular architecture:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-![Demonstração do OnlyFiles](gifpresentation.gif)
+![Demonstração do OnlyFiles](frontend/assets/app-preview.gif)
 
 ---
 
@@ -226,4 +226,4 @@ OnlyFiles é construído com uma arquitetura modular:
 
 Este projeto está licenciado sob a Licença MIT - consulte o arquivo [LICENSE](LICENSE) para obter detalhes.
 
-![Demonstração do OnlyFiles](gifpresentation.gif)
+![Demonstração do OnlyFiles](frontend/assets/app-preview.gif)
