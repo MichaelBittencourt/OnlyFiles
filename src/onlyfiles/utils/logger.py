@@ -10,18 +10,18 @@ class Logger:
     Cross-platform logging utility that configures logging to file and console.
     Handles log directory creation and provides access to log paths.
     
-    Exemplo de uso:
-        # Usando o logger centralizado
+    Usage example:
+        # Using the centralized logger
         logger = Logger()
-        logger.info("Mensagem de informação")
+        logger.info("Information message")
     """
-    
+
     # Dictionary to track configured loggers
     _configured_loggers = {}
-    
+
     # Default log file path
     LOG_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'docs', 'app.log')
-    
+
     # Define property methods first to ensure they're properly recognized
     @property
     def log_dir(self):
@@ -53,11 +53,11 @@ class Logger:
         self._name = name
         self._configured = False
         self.logger = logging.getLogger(name)
-        
+
         # Initialize log path attributes and verify
         self._log_dir = os.path.dirname(Logger.LOG_FILE)
         self._log_file = Logger.LOG_FILE
-        
+
         try:
             # Validate access through properties
             try:
@@ -72,21 +72,21 @@ class Logger:
                 except Exception as e:
                     print(f"WARNING: Failed to create directory {self._log_dir}: {str(e)}")
                     raise
-            
+
             # Setup the logger
             logger_key = f"{name}"
             if logger_key not in Logger._configured_loggers:
                 self._setup_logging()
                 Logger._configured_loggers[logger_key] = True
                 self._configured = True
-                
+
         except Exception as e:
             print(f"WARNING: Logger initialization failed: {str(e)}")
             # Fall back to a directory we can write to
             self._log_dir = os.path.expanduser('~')
             self._log_file = os.path.join(self._log_dir, 'onlyfiles_app.log')
             print(f"Using fallback log location: {self._log_file}")
-            
+
             # Try to create the handler with the fallback location
             try:
                 self._setup_logging()
@@ -98,41 +98,41 @@ class Logger:
 
     def _get_log_directory(self):
         """
-        Retorna o diretório de logs apropriado para o sistema operacional atual.
-        
+        Returns the appropriate log directory for the current operating system.
+
         Windows: %APPDATA%\\OnlyFiles\\logs
         Linux/Unix: ~/.local/share/onlyfiles/logs
         """
         app_name = "OnlyFiles"
-        
+
         if platform.system() == "Windows":
-            # No Windows, usar a variável de ambiente APPDATA
+            # On Windows, use the APPDATA environment variable
             appdata = os.environ.get('APPDATA')
             if appdata:
                 return os.path.join(appdata, app_name, 'logs')
             else:
-                # Fallback se APPDATA não estiver disponível
+                # Fallback if APPDATA is not available
                 return os.path.join(expanduser('~'), 'AppData', 'Roaming', app_name, 'logs')
         else:
-            # Em sistemas Unix (Linux, macOS), seguir o padrão XDG
+            # On Unix systems (Linux, macOS), follow the XDG standard
             xdg_data_home = os.environ.get('XDG_DATA_HOME')
             if xdg_data_home:
                 base_dir = xdg_data_home
             else:
                 base_dir = os.path.join(expanduser('~'), '.local', 'share')
-            
+
             # Use consistent app name (lowercase)
             return os.path.join(base_dir, 'onlyfiles', 'logs')
 
     def _setup_console_only(self):
         """Setup console-only logging as a last resort fallback."""
         self.logger.setLevel(logging.INFO)
-        
+
         # Clear any existing handlers to avoid duplicates
         if self.logger.handlers:
             for handler in self.logger.handlers:
                 self.logger.removeHandler(handler)
-                
+
         # Add console handler
         console_handler = logging.StreamHandler()
         console_formatter = logging.Formatter(
@@ -152,7 +152,7 @@ class Logger:
         print(f"Configured: {self._configured}")
         print(f"Log directory: {self._log_dir}")
         print(f"Log file: {self._log_file}")
-        
+
         # Check if directories and files exist
         if self._log_dir:
             print(f"Log directory exists: {os.path.exists(self._log_dir)}")
@@ -174,37 +174,37 @@ class Logger:
                         print(f"    - File size: {os.path.getsize(handler.baseFilename)} bytes")
                     except:
                         print("    - Cannot access file information")
-    
+
     def _setup_logging(self):
         """
         Configure logging to both file and console.
         """
         # Clear any existing handlers
         self.logger.handlers = []
-        
+
         # Set the logging level
         self.logger.setLevel(logging.DEBUG)
-        
+
         # Create formatters
         file_formatter = logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             datefmt='%Y-%m-%d %H:%M:%S'
         )
-        
+
         # Create and configure file handler
         file_handler = logging.FileHandler(self._log_file, encoding='utf-8')
         file_handler.setLevel(logging.DEBUG)
         file_handler.setFormatter(file_formatter)
-        
+
         # Create and configure console handler
         console_handler = logging.StreamHandler()
         console_handler.setLevel(logging.DEBUG)
         console_handler.setFormatter(file_formatter)
-        
+
         # Add handlers to logger
         self.logger.addHandler(file_handler)
         self.logger.addHandler(console_handler)
-        
+
         self._configured = True
 
     def info(self, message):

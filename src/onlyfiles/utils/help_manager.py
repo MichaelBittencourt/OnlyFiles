@@ -3,7 +3,7 @@ from typing import Dict, List
 
 class HelpManager:
     """Class responsible for managing and providing centralized help information."""
-    
+
     def __init__(self):
         self.help_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'docs', 'help.txt')
         self._help_content = self._load_help_content()
@@ -35,14 +35,13 @@ class HelpManager:
                 if len(parts) == 2:
                     command, description = parts
                     commands[command] = description.strip()
-        
         return commands
 
     def _parse_options(self) -> Dict[str, str]:
         """Extracts options from the help content."""
         options = {}
         in_options_section = False
-        
+
         for line in self._help_content.split('\n'):
             if line.startswith('Options:'):
                 in_options_section = True
@@ -54,14 +53,13 @@ class HelpManager:
                 if len(parts) == 2:
                     option, description = parts
                     options[option] = description.strip()
-        
         return options
 
     def _parse_examples(self) -> List[str]:
         """Extracts examples from the help content."""
         examples = []
         in_examples_section = False
-        
+
         for line in self._help_content.split('\n'):
             if line.startswith('Examples:'):
                 in_examples_section = True
@@ -70,7 +68,6 @@ class HelpManager:
                 break
             elif in_examples_section and line.strip():
                 examples.append(line.strip())
-        
         return examples
 
     def get_help_content(self) -> str:

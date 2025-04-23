@@ -8,7 +8,7 @@ from onlyfiles.cli.commands import cli
 def print_help():
     """
     Print a formatted help message.
-    
+
     This function displays the main help text with all available commands and options.
     """
     try:

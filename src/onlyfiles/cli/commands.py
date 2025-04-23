@@ -49,9 +49,9 @@ def cli(ctx, help: bool = False, directory: Optional[str] = None, extension: boo
         drives: bool = False, logs: bool = False, clear_logs: bool = False):
     """
     Main CLI command group for OnlyFiles.
-    
+
     This function handles all the main operations of the application:
-    
+
     - File organization (by extension, date, size, type)
     - File backup and restore
     - File movement

@@ -1,30 +1,30 @@
-OnlyFiles - Ferramenta de gerenciamento de arquivos
+OnlyFiles - File management tool
 
-Uso: onlyfiles [OPÇÃO]... [COMANDO]...
+Usage: onlyfiles [OPTION]... [COMMAND]...
 
 Commands:
-start       Inicia a interface interativa
+start       Start the interactive interface
 
 Options:
---help, -h  Mostra esta mensagem de ajuda
---version   Mostra a versão do programa
---directory, -d [PATH]  Diretório para trabalhar
---extension, -e  Organiza por extensão
---date, -t  Organiza por data
---size, -s  Organiza por tamanho
---type, -y  Organiza por tipo
---backup, -b  Cria backup dos arquivos
---revert, -r  Reverte para o último backup
---move, -m  Move arquivos
---drives, -v  Lista unidades disponíveis
---logs, -l  Visualiza logs de operações
---clear-logs, -c  Limpa logs de operações
+--help, -h  Show this help message
+--version   Show program version
+--directory, -d [PATH]  Directory to work with
+--extension, -e  Organize by extension
+--date, -t  Organize by date
+--size, -s  Organize by size
+--type, -y  Organize by type
+--backup, -b  Create backup of files
+--revert, -r  Revert to last backup
+--move, -m  Move files
+--drives, -v  List available drives
+--logs, -l  View operation logs
+--clear-logs, -c  Clear operation logs
 
 Examples:
-onlyfiles --directory ~/Downloads --extension  # Organiza arquivos por extensão
-onlyfiles --directory ~/doc --type       # Organiza arquivos por tipo
-onlyfiles --directory ~/Pictures --backup      # Cria backup dos arquivos
-onlyfiles --logs                               # Visualiza logs
-onlyfiles start                                # Inicia interface interativa
+onlyfiles --directory ~/Downloads --extension  # Organize files by extension
+onlyfiles --directory ~/doc --type       # Organize files by type
+onlyfiles --directory ~/Pictures --backup      # Create backup of files
+onlyfiles --logs                               # View logs
+onlyfiles start                                # Start interactive interface
 
-Para mais informações, visite: https://github.com/MichaelBittencourt/OnlyFiles 
+For more information, visit: https://github.com/MichaelBittencourt/OnlyFiles 

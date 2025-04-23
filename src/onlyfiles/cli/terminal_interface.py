@@ -11,43 +11,43 @@ console = Console()
 
 class TerminalInterface:
     """Provides a terminal-based user interface for file organization operations."""
-    
-    # Lista de diretórios protegidos que não devem ser organizados
+
+    # List of protected directories that should not be organized
     PROTECTED_DIRS = ['logs', 'doc']
-    
+
     def __init__(self):
         self.current_path = os.getcwd()
         self.logger = Logger("TerminalInterface", True)
         self.execution = Execution(self.logger)
         self.file_manager = FileManager(self.logger)
-        
-        # Adicionar os diretórios protegidos à lista de exclusões do gerenciador de arquivos
+
+        # Add protected directories to the file manager's exclusion list
         self._setup_protected_directories()
 
     def _setup_protected_directories(self):
-        """Configura diretórios protegidos que não devem ser processados pelo organizador"""
+        """Sets up protected directories that should not be processed by the organizer"""
         try:
-            # Adicionar o diretório de logs central
+            # Add the central logs directory
             logs_dir = os.path.dirname(Logger.LOG_FILE)
             if os.path.exists(logs_dir):
                 self.file_manager.add_excluded_directory(logs_dir)
-                self.logger.info(f"Diretório de logs protegido: {logs_dir}")
-            
-            # Adicionar o próprio arquivo de log
+                self.logger.info(f"Protected logs directory: {logs_dir}")
+
+            # Add the log file itself
             self.file_manager.add_excluded_file(os.path.basename(Logger.LOG_FILE))
-            self.logger.info(f"Arquivo de log protegido: {Logger.LOG_FILE}")
-            
-            # Adicionar outros diretórios protegidos
+            self.logger.info(f"Protected log file: {Logger.LOG_FILE}")
+
+            # Add other protected directories
             for protected_dir in self.PROTECTED_DIRS:
-                # Garantir que o diretório existe
+                # Ensure the directory exists
                 dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), protected_dir)
                 os.makedirs(dir_path, exist_ok=True)
-                
-                # Adicionar à lista de exclusões
+
+                # Add to exclusion list
                 self.file_manager.add_excluded_directory(dir_path)
-                self.logger.info(f"Diretório protegido configurado: {dir_path}")
+                self.logger.info(f"Protected directory configured: {dir_path}")
         except Exception as e:
-            self.logger.error(f"Erro ao configurar diretórios protegidos: {str(e)}")
+            self.logger.error(f"Error setting up protected directories: {str(e)}")
 
     def clear_screen(self):
         """Clears the terminal screen."""
@@ -106,15 +106,15 @@ class TerminalInterface:
         """Organizes files in the current directory."""
         console.print(f"\n[bold]Organizing files in:[/bold] {self.current_path}")
         try:
-            # Obter o caminho absoluto para evitar problemas com caminhos relativos
+            # Get absolute path to avoid issues with relative paths
             abs_path = os.path.abspath(self.current_path)
-            console.print(f"[bold blue]Usando caminho absoluto:[/bold blue] {abs_path}")
-            
-            # Executar a organização com o caminho absoluto
+            console.print(f"[bold blue]Using absolute path:[/bold blue] {abs_path}")
+
+            # Execute organization with absolute path
             self.execution.organize_all(abs_path)
             console.print("[green]Files organized successfully![/green]")
-            
-            # Verificar se os logs foram registrados
+
+            # Check if logs were registered
             log_content = self.logger.handle_logs('read')
             if not log_content or "No logs found" in log_content:
                 self.logger.warning("No logs were generated during file organization")

@@ -33,7 +33,7 @@ class FileManager:
         # Check if it is one of the excluded files
         if os.path.basename(file_path) in self.__excluded_files:
             return True
-        
+
         # Check if it is in an excluded directory
         for excluded_dir in self.__excluded_dirs:
             if os.path.abspath(file_path).startswith(os.path.abspath(excluded_dir)):
@@ -62,10 +62,10 @@ class FileManager:
 
             if not os.path.exists(origin_path):
                 raise FileNotFoundError(f"Source path does not exist: {origin_path}")
-            
+
             # Create destination directory and all parent directories if they don't exist
             os.makedirs(destination_path, exist_ok=True)
-            
+
             return True
         except Exception as e:
             self.__logger.error(f'Error validating paths: {str(e)}')
@@ -76,7 +76,7 @@ class FileManager:
         try:
             source_file = os.path.join(source_path, file)
             dest_file = os.path.join(destination_path, file)
-            
+
             # Check if it is an excluded file
             if self.__is_excluded(source_file):
                 self.__logger.info(f'File "{file}" ignored (in exclusion list).')
@@ -153,7 +153,7 @@ class FileManager:
         """Move files that don't fit into any category to the Others folder"""
         if not self.__validate_paths(origin_path, destination_path):
             return
-        
+
         # Create the "Others" folder immediately after path validation
         try:
             os.makedirs(destination_path, exist_ok=True)
@@ -203,11 +203,11 @@ class FileManager:
             files = os.listdir(directory)
             for file in files:
                 file_path = os.path.join(directory, file)
-                
+
                 # Ignore excluded files and directories
                 if self.__is_excluded(file_path) or not os.path.isfile(file_path):
                     continue
-                    
+
                 ext = os.path.splitext(file)[1].lower()
                 if ext:  # Ignore files without extension
                     ext_dir = os.path.join(directory, ext[1:])  # Remove the dot from extension
@@ -231,11 +231,11 @@ class FileManager:
             files = os.listdir(directory)
             for file in files:
                 file_path = os.path.join(directory, file)
-                
+
                 # Ignore excluded files and directories
                 if self.__is_excluded(file_path) or not os.path.isfile(file_path):
                     continue
-                    
+
                 creation_time = os.path.getctime(file_path)
                 date_str = datetime.fromtimestamp(creation_time).strftime('%Y-%m-%d')
                 date_dir = os.path.join(directory, date_str)
@@ -256,11 +256,11 @@ class FileManager:
             files = os.listdir(directory)
             for file in files:
                 file_path = os.path.join(directory, file)
-                
+
                 # Ignore excluded files and directories
                 if self.__is_excluded(file_path) or not os.path.isfile(file_path):
                     continue
-                    
+
                 size_bytes = os.path.getsize(file_path)
 
                 # Convert to appropriate size category
@@ -293,11 +293,11 @@ class FileManager:
             files = os.listdir(directory)
             for file in files:
                 file_path = os.path.join(directory, file)
-                
+
                 # Ignore excluded files and directories
                 if self.__is_excluded(file_path) or not os.path.isfile(file_path):
                     continue
-                    
+
                 # Get file extension
                 _, ext = os.path.splitext(file)
                 ext = ext.lower()
@@ -398,14 +398,14 @@ class FileManager:
                 if len(parts) >= 5:
                     filename = parts[1]
                     destination = parts[3]
-                    
+
                     # The destination is the full directory
                     source_path = os.path.join(destination, filename)
-                    
+
                     # The original destination is the parent directory
                     parent_dir = os.path.dirname(destination)
                     target_path = os.path.join(parent_dir, filename)
-                    
+
                     if os.path.exists(source_path):
                         shutil.move(source_path, target_path)
                         self.__logger.info(f'File "{filename}" reverted to "{parent_dir}".')
@@ -418,14 +418,14 @@ class FileManager:
                 if len(parts) == 2:
                     filename = parts[0].strip()
                     destination = parts[1].strip()
-                    
+
                     # The destination is the full directory
                     source_path = os.path.join(destination, filename)
-                    
+
                     # The original destination is the parent directory
                     parent_dir = os.path.dirname(destination)
                     target_path = os.path.join(parent_dir, filename)
-                    
+
                     if os.path.exists(source_path):
                         shutil.move(source_path, target_path)
                         self.__logger.info(f'File "{filename}" reverted to "{parent_dir}".')
@@ -435,7 +435,7 @@ class FileManager:
             else:
                 # Unrecognized log format
                 self.__logger.warning('Unrecognized log format for reversion')
-                
+
         except Exception as e:
             self.__logger.error(f'Error reverting operation: {str(e)}')
         return False
