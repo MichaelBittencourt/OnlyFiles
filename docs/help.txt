@@ -1,0 +1,30 @@
+OnlyFiles - File management tool
+
+Usage: onlyfiles [OPTION]... [COMMAND]...
+
+Commands:
+start       Start the interactive interface
+
+Options:
+--help, -h  Show this help message
+--version   Show program version
+--directory, -d [PATH]  Directory to work with
+--extension, -e  Organize by extension
+--date, -t  Organize by date
+--size, -s  Organize by size
+--type, -y  Organize by type
+--backup, -b  Create backup of files
+--revert, -r  Revert to last backup
+--move, -m  Move files
+--drives, -v  List available drives
+--logs, -l  View operation logs
+--clear-logs, -c  Clear operation logs
+
+Examples:
+onlyfiles --directory ~/Downloads --extension  # Organize files by extension
+onlyfiles --directory ~/doc --type       # Organize files by type
+onlyfiles --directory ~/Pictures --backup      # Create backup of files
+onlyfiles --logs                               # View logs
+onlyfiles start                                # Start interactive interface
+
+For more information, visit: https://github.com/MichaelBittencourt/OnlyFiles 
