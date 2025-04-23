@@ -1,0 +1,477 @@
+/* RESET BÁSICO */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background-color: #000; /* fundo preto */
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  /* ========== HEADER FIXO ========== */
+  #main-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.85); /* opacidade padrão */
+    padding: 16px 0;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* HEADER COM OPACIDADE REDUZIDA AO SCROLL */
+  #main-header.scrolled {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+  
+  /* LOGO */
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  /* Estilização para o container da logo */
+.logo img {
+    height: 40px;
+    display: block;
+    }
+.logo {
+    display: flex;
+    align-items: center;
+    }      
+ 
+  /* MENU DE NAVEGAÇÃO */
+  .main-nav ul {
+    display: flex;
+    list-style: none;
+    gap: 32px;
+  }
+  
+  .main-nav a {
+    color: #bbb;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+  }
+  
+  .main-nav a:hover {
+    color: #fff;
+  }
+  
+  /* BOTÃO DE DOWNLOAD */
+  .download-btn {
+    background-color: #fff;
+    color: #222; /* cinza escuro para o texto */
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.06);
+  }
+  
+  .download-btn:hover {
+    background-color: #111; /* preto levemente mais claro que o fundo */
+    color: #fff;
+    border-color: #333; /* leve delineado no hover */
+     box-shadow: none;
+  }
+
+/* ===== HERO SECTION ===== */
+#hero-section {
+    padding: 120px 0 80px; /* espaço acima e abaixo */
+    background-color: #000;
+  }
+  
+  .hero-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+  }
+  
+  .hero-text {
+    flex: 1;
+    min-width: 300px;
+  }
+  
+  .hero-text h1 {
+    font-size: 3rem;
+    color: #eee; /* cinza muito claro para o título */
+    margin-bottom: 20px;
+  }
+  
+  .hero-text p {
+    font-size: 1.25rem;
+    color: #aaa; /* cinza médio para o parágrafo */
+    margin-bottom: 30px;
+    max-width: 480px;
+  }
+  
+  .hero-media {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .hero-media img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+  }
+  
+/* ===== DEPOIMENTOS ===== */
+#testimonials {
+  background-color: #000; 
+  padding: 100px 0; 
+  color: #eee; 
+  text-align: center; 
+}
+
+.testimonials-container h2 {
+  font-size: 2.5rem; /* Tamanho grande para o título */
+  margin-bottom: 60px;
+  color: ##eee; 
+}
+
+/* ===== DEPOIMENTOS CARROSSEL ===== */
+
+.testimonial-carousel {
+  display: flex;
+  flex-direction: column; /* Organiza filhos em coluna */
+  align-items: center; /* Centraliza horizontalmente */
+}
+
+/* Estilo base do depoimento (modo carrossel ativo) */
+.testimonial {
+  position: absolute; /* Empilha todos os depoimentos */
+  opacity: 0; /* Invisível por padrão */
+  transition: opacity 0.5s ease; /* Transição suave na troca */
+  width: 100%; /* Ocupa toda a largura disponível */
+  background-color: #111; /* Fundo escuro */
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 360px;  
+}
+
+/* Quando o depoimento está ativo/visível */
+.testimonial.active {
+  opacity: 1; /* Torna visível */
+  position: relative; /* Remove empilhamento só do ativo */
+  pointer-events: auto; /* Permite interações */
+
+}
+
+/* Controles de navegação (botões Prev/Next) */
+.testimonial-controls {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Espaço entre os botões */
+}
+
+/* Estilo dos botões */
+.testimonial-controls button {
+  background-color: #111;
+  color: #eee;
+  border: 1px solid #333;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+}
+
+.testimonial-controls button:hover {
+  background-color: #fff;
+  color: #111;
+}
+
+/* Efeito de elevação ao passar o mouse */
+.testimonial:hover {
+  transform: translateY(-8px);
+}
+
+/* Estilo da imagem do usuário */
+.testimonial img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+/* Estilo do texto da citação */
+.testimonial .quote {
+  font-size: 1rem;
+  color: #ccc;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+/* Estilo do nome da pessoa */
+.testimonial .author {
+  font-size: 1rem;
+  color: #aaa;
+}
+
+/* Estilo do cargo */
+.testimonial .role {
+  font-weight: normal;
+  font-size: 0.875rem;
+  color: #777;
+}
+/* ===== SEÇÃO DE FUNCIONALIDADES ===== */
+#features {
+  background-color: #000;
+  color: #eee;
+  padding: 100px 0;
+}
+
+.features-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 60px;
+}
+
+.features-text {
+  flex: 1;
+  min-width: 300px;
+}
+
+.features-text h2 {
+  font-size: 2.25rem;
+  margin-bottom: 20px;
+  color: #eee;
+}
+
+.features-text .subtitle {
+  font-size: 1.125rem;
+  color: #aaa;
+  margin-bottom: 30px;
+}
+
+.features-list {
+  list-style-position: inside;
+  font-size: 1rem;
+  color: #ccc;
+  line-height: 1.8;
+}
+
+.features-images {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.features-images img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.04);
+}
+
+/* ===== CHAMADA PARA AÇÃO (CTA) ===== */
+#cta-download {
+  background-color: #000; /* fundo preto geral */
+  padding: 100px 0;
+  text-align: center;
+}
+
+.cta-box {
+  background-color: #1a1a1a; /* caixa cinza escura */
+  padding: 60px 40px;
+  border-radius: 12px;
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.cta-box h2 {
+  font-size: 2rem;
+  color: #eee;
+  margin: 0;
+}
+
+.cta-subtitle {
+  font-size: 1.125rem;
+  color: #aaa;
+  margin: 0;
+  max-width: 600px;
+}
+
+.cta-btn {
+  background-color: #fff;
+  color: #222;
+  padding: 12px 28px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.cta-btn:hover {
+  background-color: #111;
+  color: #fff;
+}
+/* ===== RODAPÉ ===== */
+#site-footer {
+  background-color: #0a0a0a;
+  color: #aaa;
+  padding: 60px 20px 30px;
+  font-size: 0.95rem;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-column {
+  flex: 1;
+  min-width: 260px;
+}
+
+.footer-column h4 {
+  color: #fff;
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column ul li {
+  margin-bottom: 8px;
+  color: #ccc;
+}
+
+.footer-column p {
+  color: #ccc;
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+/* Base do rodapé */
+.footer-bottom {
+  border-top: 1px solid #222;
+  margin-top: 40px;
+  padding-top: 20px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+/* Subtítulo da página About Us */
+
+.team-intro {
+  font-size: 1.75rem;
+  color: #eee;
+  text-align: center;
+  margin-bottom: 60px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* Seção dos desenvolvedores */
+.developer-section {
+  background-color: #0a0a0a;
+  padding: 80px 20px;
+}
+
+.developer-section .container {
+  display: block; /* <- impede que entre em modo grid ou flex */
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.developer-card {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  background-color: #111;
+  padding: 24px;
+  border-radius: 12px;
+  gap: 24px;
+  width: 100%;
+  margin-bottom: 40px;
+
+   /* ESSENCIAL: altura mínima para preservar o espaço vertical */
+   min-height: 240px;
+}
+
+.developer-photo {
+  width: 180px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+  flex-shrink: 0;
+   /* ESSENCIAL: altura mínima para preservar o espaço vertical */
+   min-height: 200px;
+}
+
+.developer-info h3 {
+  color: #fff;
+  margin: 0 0 10px 0;
+}
+
+.developer-info p {
+  margin: 0;
+  color: #aaa;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* Responsivo, mas mantendo 1 por linha */
+@media (max-width: 768px) {
+  .developer-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .developer-photo {
+    width: 120px; /* largura fixa */
+    height: 180px; /* altura fixa */
+    aspect-ratio: 3 / 4; /* proporção retrato */
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+    flex-shrink: 0;
+  }
+  
+}
